@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, StyleSheet, ImageBackground } from "react-native";
 import { Text, Input, Button } from "react-native-elements";
 import Spacer from "../components/Spacer";
+import { Context as AuthContext } from "../context/AuthContext";
 
 const SignupScreen = ({ navigation }) => {
+  const { state, signup } = useContext(AuthContext);
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +20,11 @@ const SignupScreen = ({ navigation }) => {
       }}
     >
       <View style={styles.container}>
+        {state.errorMessage ? (
+          <View style={styles.borderIos}>
+            <Text style={styles.errorContainer}>{state.errorMessage}</Text>
+          </View>
+        ) : null}
         <Spacer>
           <Text h3 style={{ alignSelf: "center", color: "white" }}>
             Tracker Signup
@@ -25,7 +33,7 @@ const SignupScreen = ({ navigation }) => {
         <Spacer />
         <Spacer>
           <Input
-            label="Name"
+            label="Full Name"
             value={name}
             onChangeText={setName}
             labelStyle={styles.white}
@@ -60,7 +68,13 @@ const SignupScreen = ({ navigation }) => {
         </Spacer>
         <Spacer />
         <Spacer>
-          <Button title="Sign Up" buttonStyle={styles.btn} />
+          <Button
+            title="Sign Up"
+            buttonStyle={styles.btn}
+            onPress={() => {
+              signup({ name, email, password });
+            }}
+          />
         </Spacer>
       </View>
     </ImageBackground>
@@ -93,6 +107,19 @@ const styles = StyleSheet.create({
   },
   white: {
     color: "white"
+  },
+  errorContainer: {
+    color: "rgb(255, 255, 255)"
+  },
+  borderIos: {
+    fontSize: 17,
+    backgroundColor: "rgb(195, 30, 60)",
+    paddingVertical: 15,
+    paddingHorizontal: 18,
+    alignSelf: "flex-end",
+    borderTopLeftRadius: 5,
+    borderBottomLeftRadius: 5,
+    overflow: "hidden"
   }
 });
 
