@@ -1,11 +1,17 @@
 import React, { useState, useContext } from "react";
-import { View, StyleSheet, ImageBackground } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity
+} from "react-native";
 import { Text, Input, Button } from "react-native-elements";
 import Spacer from "../components/Spacer";
 import { Context as AuthContext } from "../context/AuthContext";
+import { NavigationEvents } from "react-navigation";
 
 const SignupScreen = ({ navigation }) => {
-  const { state, signup } = useContext(AuthContext);
+  const { state, signup, clearScreenMessages } = useContext(AuthContext);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,9 +22,10 @@ const SignupScreen = ({ navigation }) => {
       style={styles.backgroundImage}
       source={{
         uri:
-          "https://res.cloudinary.com/djnhrvjyf/image/upload/q_auto,f_auto/v1577806915/woman-pointing-at-sky-on-seashore-1117493_q9gdw8.jpg"
+          "https://res.cloudinary.com/djnhrvjyf/image/upload/f_auto,q_auto:eco/v1577806915/woman-pointing-at-sky-on-seashore-1117493_q9gdw8.jpg"
       }}
     >
+      <NavigationEvents onWillBlur={clearScreenMessages} />
       <View style={styles.container}>
         {state.errorMessage ? (
           <View style={styles.borderIos}>
@@ -71,11 +78,16 @@ const SignupScreen = ({ navigation }) => {
           <Button
             title="Sign Up"
             buttonStyle={styles.btn}
-            onPress={() => {
-              signup({ name, email, password });
-            }}
+            onPress={() => signup({ name, email, password })}
           />
         </Spacer>
+        <TouchableOpacity onPress={() => navigation.navigate("Signin")}>
+          <Spacer>
+            <Text style={styles.link}>
+              Already have an account? Sign in instead
+            </Text>
+          </Spacer>
+        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
@@ -120,6 +132,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
     overflow: "hidden"
+  },
+  link: {
+    color: "rgb(255, 255, 255)",
+    fontSize: 20,
+    alignSelf: "center"
   }
 });
 
