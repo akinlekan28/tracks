@@ -6,10 +6,22 @@ import { navigate } from "../navigationRef";
 const authReducer = (state, action) => {
   switch (action.type) {
     case "SIGN_IN":
-      return { ...state, token: action.payload };
+      return {
+        ...state,
+        token: action.payload.token,
+        user: action.payload.userId
+      };
 
     case "SIGN_OUT":
-      return { ...state, token: action.payload };
+      return {
+        ...state,
+        token: action.payload,
+        user: action.payload,
+        profile: action.payload
+      };
+
+    case "GET_PROFILE":
+      return { ...state, profile: action.payload };
 
     case "GET_ERROR":
       return { ...state, errorMessage: action.payload };
@@ -24,11 +36,34 @@ const authReducer = (state, action) => {
 
 const tryLocalSignin = dispatch => async () => {
   const token = await AsyncStorage.getItem("token");
-  if (token) {
-    dispatch({ type: "SIGN_IN", payload: token });
+  const userId = await AsyncStorage.getItem("user");
+  if (token && userId) {
+    dispatch({ type: "SIGN_IN", payload: { token, userId } });
     navigate("TrackList");
   } else {
     navigate("loginFlow");
+  }
+};
+
+const getProfile = dispatch => async userId => {
+  try {
+    const response = await trackerApi.get(`/profile/${userId}`);
+    dispatch({
+      type: "GET_PROFILE",
+      payload: response.data
+    });
+  } catch (error) {
+    dispatch({
+      type: "GET_ERROR",
+      payload: error.response.data.message
+    });
+
+    setTimeout(function() {
+      dispatch({
+        type: "CLEAR_ERROR",
+        payload: ""
+      });
+    }, 4000);
   }
 };
 
@@ -40,10 +75,11 @@ const signup = dispatch => async ({ name, email, password }) => {
       password
     });
     await AsyncStorage.setItem("token", response.data.token);
+    await AsyncStorage.setItem("user", response.data.userId);
 
     dispatch({
       type: "SIGN_IN",
-      payload: response.data.token
+      payload: response.data
     });
 
     navigate("TrackList");
@@ -67,10 +103,11 @@ const signin = dispatch => async ({ email, password }) => {
     const response = await trackerApi.post("/signin", { email, password });
 
     await AsyncStorage.setItem("token", response.data.token);
+    await AsyncStorage.setItem("user", response.data.userId);
 
     dispatch({
       type: "SIGN_IN",
-      payload: response.data.token
+      payload: response.data
     });
 
     navigate("TrackList");
@@ -110,7 +147,8 @@ export const { Provider, Context } = createDataContext(
     signout,
     clearScreenMessages,
     tryLocalSignin,
+    getProfile,
     signout
   },
-  { token: null, errorMessage: "" }
+  { token: null, errorMessage: "", user: null, profile: {} }
 );
