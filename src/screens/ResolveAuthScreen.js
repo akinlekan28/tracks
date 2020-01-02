@@ -11,8 +11,8 @@ const ResolveAuthScreen = () => {
 
   return (
     <View style={{ flex: 1, justifyContent: "center" }}>
-      <Text>
-        <Image source={require("../../assets/spinner.svg")} />
+      <Text style={{ alignSelf: "center" }}>
+        <Image source={require("../../assets/spinner.gif")} />
       </Text>
     </View>
   );
