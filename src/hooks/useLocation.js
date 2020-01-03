@@ -5,28 +5,42 @@ import {
   watchPositionAsync
 } from "expo-location";
 
-export default callback => {
+export default (shouldTrack, callback) => {
   const [err, setErr] = useState(null);
 
-  const startWatch = async () => {
-    try {
-      await requestPermissionsAsync();
-      await watchPositionAsync(
-        {
-          accuracy: Accuracy.BestForNavigation,
-          timeInterval: 1000,
-          distanceInterval: 10
-        },
-        callback
-      );
-    } catch (error) {
-      setErr(error);
-    }
-  };
-
   useEffect(() => {
-    startWatch();
-  }, []);
+    let subscriber;
+    const startWatch = async () => {
+      try {
+        await requestPermissionsAsync();
+        subscriber = await watchPositionAsync(
+          {
+            accuracy: Accuracy.BestForNavigation,
+            timeInterval: 1000,
+            distanceInterval: 10
+          },
+          callback
+        );
+      } catch (error) {
+        setErr(error);
+      }
+    };
+
+    if (shouldTrack) {
+      startWatch();
+    } else {
+      if (subscriber) {
+        subscriber.remove();
+      }
+      subscriber = null;
+    }
+
+    return () => {
+      if (subscriber) {
+        subscriber.remove();
+      }
+    };
+  }, [shouldTrack, callback]);
 
   return [err];
 };
