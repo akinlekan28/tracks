@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "tracks",
-    "slug": "tracks",
+    "name": "My Tracks",
+    "slug": "my-tracks",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": ["ios", "android", "web"],
@@ -18,7 +18,11 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.olalekan.trackerApp"
+    },
+    "android": {
+      "package": "com.olalekan.trackerApp"
     }
   }
 }

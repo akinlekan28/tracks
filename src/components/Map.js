@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import MapView, { Polyline, Circle } from "react-native-maps";
 import { Context as LocationContext } from "../context/LocationContext";
 import Spinner from "./Spinner";
@@ -20,12 +20,13 @@ const Map = () => {
         latitudeDelta: 0.01,
         longitudeDelta: 0.01
       }}
-      followsUserLocation={true}
-      showsCompass={true}
+      style={styles.map}
       showsUserLocation={true}
       showsMyLocationButton
+      showsBuildings
       showsTraffic
-      style={styles.map}
+      followsUserLocation={true}
+      scrollEnabled={true}
     >
       <Circle
         center={currentLocation.coords}
@@ -40,7 +41,7 @@ const Map = () => {
 
 const styles = StyleSheet.create({
   map: {
-    height: 300
+    height: 400
   }
 });
 

@@ -1,9 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { Button, Avatar } from "react-native-elements";
 import { SafeAreaView } from "react-navigation";
 import Spacer from "../components/Spacer";
 import { Context as AuthContext } from "../context/AuthContext";
+import { FontAwesome } from "@expo/vector-icons";
 
 const AccountScreen = () => {
   const { state, signout, getProfile } = useContext(AuthContext);
@@ -21,6 +22,14 @@ const AccountScreen = () => {
   useEffect(() => {
     getProfile(id);
   }, []);
+
+  if (state.loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator size="large" style={{ alignSelf: "center" }} />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView forceInset={{ top: "always" }} style={styles.container}>
@@ -81,5 +90,9 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   }
 });
+
+AccountScreen.navigationOptions = {
+  tabBarIcon: <FontAwesome name="gear" size={20} />
+};
 
 export default AccountScreen;

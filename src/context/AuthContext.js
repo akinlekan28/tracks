@@ -20,8 +20,11 @@ const authReducer = (state, action) => {
         profile: action.payload
       };
 
+    case "SET_LOADING":
+      return { ...state, loading: true };
+
     case "GET_PROFILE":
-      return { ...state, profile: action.payload };
+      return { ...state, profile: action.payload, loading: false };
 
     case "GET_ERROR":
       return { ...state, errorMessage: action.payload };
@@ -47,6 +50,8 @@ const tryLocalSignin = dispatch => async () => {
 
 const getProfile = dispatch => async userId => {
   try {
+    dispatch({ type: "SET_LOADING" });
+
     const response = await trackerApi.get(`/profile/${userId}`);
     dispatch({
       type: "GET_PROFILE",
@@ -150,5 +155,5 @@ export const { Provider, Context } = createDataContext(
     getProfile,
     signout
   },
-  { token: null, errorMessage: "", user: null, profile: {} }
+  { token: null, errorMessage: "", user: null, profile: {}, loading: false }
 );
