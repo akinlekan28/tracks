@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "My Tracks",
-    "slug": "my-tracks",
+    "name": "Tracks",
+    "slug": "tracks",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": ["ios", "android", "web"],
@@ -14,15 +14,42 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 300000
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.olalekan.trackerApp"
+      "bundleIdentifier": "com.olalekan.trackerApp",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDdHMB87WgSAdWlbEiORryX6ttcBiIwJC8"
+      }
     },
     "android": {
-      "package": "com.olalekan.trackerApp"
+      "package": "com.olalekan.trackerApp",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "READ_PHONE_STATE"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDdHMB87WgSAdWlbEiORryX6ttcBiIwJC8"
+        }
+      }
     }
+  },
+  "hooks": {
+    "postPublish": [
+      {
+        "file": "sentry-expo/upload-sourcemaps",
+        "config": {
+          "organization": "Student",
+          "project": "student-uo",
+          "authToken": "28757951a89c48ce8115308c243bac89ae697744a41f4dc98b398b8ce56120f5"
+        }
+      }
+    ]
   }
 }

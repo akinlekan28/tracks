@@ -5,10 +5,13 @@ import { navigate } from "../navigationRef";
 const trackReducer = (state, action) => {
   switch (action.type) {
     case "GET_TRACKS":
-      return { tracks: action.payload };
+      return { tracks: action.payload, loading: false };
 
     case "DELETE_TRACK":
       return state.tracks.filter(tracks => tracks._id !== action.payload);
+
+    case "SET_LOADING":
+      return { ...state, loading: true };
 
     case "GET_ERROR":
       return { ...state, error: action.payload };
@@ -22,7 +25,9 @@ const trackReducer = (state, action) => {
 };
 
 const fetchTracks = dispatch => async () => {
+  dispatch({ type: "SET_LOADING" });
   const response = await trackerApi.get("/tracks");
+  console.log(response);
   dispatch({
     type: "GET_TRACKS",
     payload: response.data
@@ -60,5 +65,5 @@ const deleteTrack = dispatch => async trackId => {
 export const { Provider, Context } = createDataContext(
   trackReducer,
   { fetchTracks, createTrack, deleteTrack },
-  { error: "", tracks: [] }
+  { error: "", tracks: [], loading: false }
 );

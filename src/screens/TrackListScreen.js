@@ -1,5 +1,11 @@
 import React, { useContext } from "react";
-import { StyleSheet, FlatList, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  View,
+  ActivityIndicator
+} from "react-native";
 import { NavigationEvents } from "react-navigation";
 import { ListItem, Text, Button } from "react-native-elements";
 import { Context as TrackContext } from "../context/TrackContext";
@@ -8,11 +14,13 @@ import Spacer from "../components/Spacer";
 
 const TrackListScreen = ({ navigation }) => {
   const {
-    state: { tracks },
+    state: { tracks, loading },
     fetchTracks
   } = useContext(TrackContext);
 
-  if (!tracks.length) {
+  // console.log(tracks);
+
+  if (tracks.length === 0) {
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
         <Text h4 style={{ alignSelf: "center" }}>
@@ -27,6 +35,14 @@ const TrackListScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("TrackCreate")}
           />
         </Spacer>
+      </View>
+    );
+  }
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}>
+        <ActivityIndicator size="large" />
       </View>
     );
   }

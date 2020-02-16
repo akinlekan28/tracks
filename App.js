@@ -16,6 +16,8 @@ import { Provider as LocationProvider } from "./src/context/LocationContext";
 import { Provider as TrackProvider } from "./src/context/TrackContext";
 import { setNavigator } from "./src/navigationRef";
 import { FontAwesome } from "@expo/vector-icons";
+import * as Sentry from "sentry-expo";
+import Constants from "expo-constants";
 
 const trackListFlow = createStackNavigator({
   TrackList: TrackListScreen,
@@ -55,6 +57,14 @@ const switchNavigator = createSwitchNavigator({
     }
   )
 });
+
+Sentry.init({
+  dsn: "https://bfdefd42c63a426f9053781a770b1834@sentry.io/1871629",
+  enableInExpoDevelopment: true,
+  debug: true
+});
+
+Sentry.setRelease(Constants.manifest.revisionId);
 
 const App = createAppContainer(switchNavigator);
 
